@@ -13,7 +13,7 @@ const getBody = (req: IncomingMessage): Promise<undefined | User> => {
 
     req.on('end', () => {
       try {
-        resolve(JSON.parse(body));
+        resolve(JSON.parse(body || '{}'));
       } catch (error) {
         reject(error);
       }
@@ -42,20 +42,23 @@ export async function routeHandler(req: IncomingMessage, res: ServerResponse): P
         reqMethod = method;
       } else {
         response.statusCode = 405;
-        response.body.message = `Method "${method}" not allowed`;
+        response.body = { message: `Method "${method}" not allowed` };
 
         return sendResponse(res, response);
       }
     } else {
       response.statusCode = 400;
-      response.body.message = 'Bad request';
+      response.body = { message: 'Bad request' };
 
       return sendResponse(res, response);
     }
 
     try {
       user = await getBody(req);
-    } catch (error) {
+    } catch {
+      response.statusCode = 500;
+      response.body = { message: 'Internal server error' };
+
       return sendResponse(res, response);
     }
 

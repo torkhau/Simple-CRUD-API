@@ -1,24 +1,65 @@
+import { validate } from 'uuid';
 import { RequestMethod, Response } from '../routes/type';
 import { UserService } from '../services';
-import { User } from '../store/type';
+import { isPartialUserData, isUserData, User } from '../store/type';
 
 export class UserController {
-  private readonly userService = new UserService();
+  private readonly service = new UserService();
 
   handle(method: RequestMethod, param?: string, user?: User): Response {
-    const response: Response = { statusCode: 200, body: { message: 'OK' } };
-
     switch (method) {
       case 'GET':
-        break;
+        return this.getUser(param);
       case 'POST':
-        break;
+        return this.createUser(user);
       case 'PUT':
-        break;
+        return this.updateUser(param, user);
       case 'DELETE':
-        break;
+        return this.deleteUser(param);
+      default:
+        return { statusCode: 405, body: { message: `Method "${method}" not allowed` } };
+    }
+  }
+
+  private getUser(userId?: string): Response {
+    if (userId) {
+      if (!validate(userId)) return { statusCode: 400, body: { message: 'Invalid user ID' } };
+
+      const user = this.service.getUser(userId);
+
+      if (!user) return { statusCode: 404, body: { message: 'User not found' } };
+
+      return { statusCode: 200, body: { message: 'OK', data: user } };
     }
 
-    return response
+    return { statusCode: 200, body: { message: 'OK', data: this.service.getUsers() } };
+  }
+
+  private createUser(user?: User): Response {
+    if (!isUserData(user)) return { statusCode: 400, body: { message: 'Invalid user data' } };
+
+    return { statusCode: 201, body: { message: 'User created', data: this.service.createUser(user) } };
+  }
+
+  private updateUser(userId?: string, userData?: Partial<User>): Response {
+    if (!userId || !validate(userId)) return { statusCode: 400, body: { message: 'Invalid user ID' } };
+
+    if (!isPartialUserData(userData)) return { statusCode: 400, body: { message: 'Invalid user data' } };
+
+    const user = this.service.updateUser(userId, userData);
+
+    if (!user) return { statusCode: 404, body: { message: 'User not found' } };
+
+    return { statusCode: 200, body: { message: 'User updated', data: user } };
+  }
+
+  private deleteUser(userId?: string): Response {
+    if (!userId || !validate(userId)) return { statusCode: 400, body: { message: 'Invalid user ID' } };
+
+    const user = this.service.deleteUser(userId);
+
+    if (!user) return { statusCode: 404, body: { message: 'User not found' } };
+
+    return { statusCode: 204 };
   }
 }

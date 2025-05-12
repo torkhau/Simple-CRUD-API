@@ -2,7 +2,7 @@ import { UserDTO } from '../store/type';
 
 export interface Response {
   statusCode: number;
-  body: ResponseBody;
+  body?: ResponseBody;
 }
 
 interface ResponseBody {
