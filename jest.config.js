@@ -2,7 +2,7 @@ module.exports = {
   testEnvironment: 'node',
   testPathIgnorePatterns: ['/node_modules/', '/build/'],
   testMatch: ['**/?(*.)+(test).ts'],
-  moduleFileExtensions: ['ts'],
+  moduleFileExtensions: ['ts', 'js'],
   moduleNameMapper: { '^axios$': require.resolve('axios') },
   restoreMocks: true,
   resetMocks: true,

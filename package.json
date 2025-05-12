@@ -10,7 +10,8 @@
     "start:prod": "tsc && node build/index.js",
     "build": "tsc",
     "start:ts-node": "ts-node src",
-    "eslint": "npx eslint ."
+    "eslint": "npx eslint .",
+    "test": "jest --silent"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
