@@ -1,4 +1,4 @@
-import { store } from '../store';
+import { store } from '..';
 import { UserData } from '../store/type';
 
 export class UserService {

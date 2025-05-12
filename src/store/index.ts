@@ -1,3 +1,1 @@
-import { Store } from './store.api';
-
-export const store = new Store();
+export * from './store.api';
