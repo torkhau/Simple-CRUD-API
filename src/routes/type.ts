@@ -1,4 +1,4 @@
-import { UserDTO } from '../store/type';
+import { User } from '../store/type';
 
 export interface Response {
   statusCode: number;
@@ -7,7 +7,7 @@ export interface Response {
 
 interface ResponseBody {
   message: string;
-  data?: UserDTO | UserDTO[];
+  data?: User | User[];
 }
 
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';

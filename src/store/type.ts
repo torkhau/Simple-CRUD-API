@@ -1,13 +1,22 @@
-export interface User {
+export interface UserData {
   username: string;
   age: number;
   hobbies: string[];
 }
 
-export const isUserData = (userData: unknown): userData is User => {
+export interface User extends UserData {
+  id: string;
+}
+
+export const isUserData = (userData: unknown): userData is UserData => {
   if (typeof userData !== 'object' || userData === null) return false;
 
-  const { username, age, hobbies } = userData as User;
+  const allowedKeys: Array<keyof User> = ['username', 'age', 'hobbies'];
+  const keys = Object.keys(userData);
+
+  if (keys.some((key) => !allowedKeys.includes(key as keyof User))) return false;
+
+  const { username, age, hobbies } = userData as UserData;
 
   if (
     typeof username !== 'string' ||
@@ -21,10 +30,15 @@ export const isUserData = (userData: unknown): userData is User => {
   return true;
 };
 
-export const isPartialUserData = (userData: unknown): userData is Partial<User> => {
+export const isPartialUserData = (userData: unknown): userData is Partial<UserData> => {
   if (typeof userData !== 'object' || userData === null) return false;
 
-  const partialUser = userData as Partial<User>;
+  const allowedKeys: Array<keyof User> = ['username', 'age', 'hobbies'];
+  const keys = Object.keys(userData);
+
+  if (keys.some((key) => !allowedKeys.includes(key as keyof User))) return false;
+
+  const partialUser = userData as Partial<UserData>;
   const { username, age, hobbies } = partialUser;
 
   if (username !== undefined && typeof username !== 'string') return false;
@@ -37,7 +51,3 @@ export const isPartialUserData = (userData: unknown): userData is Partial<User> 
 
   return true;
 };
-
-export interface UserDTO extends User {
-  id: string;
-}

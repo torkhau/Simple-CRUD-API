@@ -56,9 +56,9 @@ export class UserController {
   private deleteUser(userId?: string): Response {
     if (!userId || !validate(userId)) return { statusCode: 400, body: { message: 'Invalid user ID' } };
 
-    const user = this.service.deleteUser(userId);
+    const result = this.service.deleteUser(userId);
 
-    if (!user) return { statusCode: 404, body: { message: 'User not found' } };
+    if (!result) return { statusCode: 404, body: { message: 'User not found' } };
 
     return { statusCode: 204 };
   }

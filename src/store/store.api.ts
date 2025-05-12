@@ -1,45 +1,43 @@
 import { v4 as uuidV4 } from 'uuid';
-import { User, UserDTO } from './type';
+import { User, UserData } from './type';
 
 export class Store {
-  private data: Record<string, User>;
+  private data: User[];
 
   constructor() {
-    this.data = {};
+    this.data = [];
   }
 
-  get(userId: string): UserDTO | null {
-    if (!this.data[userId]) return null;
-
-    return {
-      id: userId,
-      ...this.data[userId],
-    };
+  private getUserIndex(userId: string): number {
+    return this.data.findIndex(({ id }) => id === userId);
   }
 
-  getAll(): UserDTO[] {
-    return Object.entries(this.data).map(([id, user]) => ({
-      id,
-      ...user,
-    }));
+  private getUserData(userId: string): User | null {
+    const user = this.data.find(({ id }) => id === userId);
+
+    return user || null;
   }
 
-  new(value: User): UserDTO {
-    const userId = uuidV4();
-    this.data[userId] = value;
-
-    return {
-      id: userId,
-      ...this.data[userId],
-    };
+  get(userId: string): User | null {
+    return this.getUserData(userId);
   }
 
-  set(userId: string, { username, age, hobbies }: Partial<User>): UserDTO | null {
-    const user = this.get(userId);
+  getAll(): User[] {
+    return [...this.data];
+  }
 
-    if (!user) return null;
+  new(value: UserData): User {
+    const id = this.data.push({ id: uuidV4(), ...value }) - 1;
 
-    const newData: User = { age: user.age, hobbies: user.hobbies, username: user.username };
+    return this.data[id];
+  }
+
+  set(userId: string, { username, age, hobbies }: Partial<UserData>): User | null {
+    const index = this.getUserIndex(userId);
+
+    if (index === -1) return null;
+
+    const newData: User = { ...this.data[index] };
 
     if (username) newData.username = username;
 
@@ -47,19 +45,15 @@ export class Store {
 
     if (hobbies) newData.hobbies = hobbies;
 
-    this.data[userId] = newData;
+    this.data[index] = newData;
 
-    return {
-      id: userId,
-      ...this.data[userId],
-    };
+    return this.getUserData(userId);
   }
 
-  delete(userId: string): UserDTO | null {
-    const user = this.get(userId);
+  delete(userId: string): boolean {
+    const initLength = this.data.length;
+    this.data = this.data.filter(({ id }) => id !== userId);
 
-    if (user) delete this.data[userId];
-
-    return user;
+    return this.data.length < initLength;
   }
 }
