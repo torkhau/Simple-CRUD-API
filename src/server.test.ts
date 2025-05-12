@@ -9,8 +9,8 @@ describe('CRUDServer integration tests', () => {
   let server: CRUDServer;
 
   beforeAll(() => {
-    server = new CRUDServer();
-    server.listen(PORT);
+    server = new CRUDServer(PORT);
+    server.start();
   });
 
   afterAll((done) => {

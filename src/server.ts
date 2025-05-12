@@ -1,17 +1,17 @@
-import 'dotenv/config';
 import { Server } from 'http';
 import { routeHandler } from './routes';
 
 export class CRUDServer extends Server {
-  private readonly PORT = parseInt(process.env.PORT || '3000', 10);
+  private readonly port: number;
 
-  constructor() {
+  constructor(port: number) {
     super(routeHandler);
+    this.port = port;
   }
 
   start() {
-    this.listen(this.PORT, () => {
-      console.log(`Server started at http://localhost:${this.PORT}`);
+    this.listen(this.port, () => {
+      console.log(`Server started at http://localhost:${this.port}`);
     });
   }
 }

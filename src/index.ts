@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import { CRUDServer } from './server';
 
-const server = new CRUDServer();
-
 try {
+  const port = parseInt(process.env.PORT || '3000', 10);
+  const server = new CRUDServer(port);
   server.start();
 } catch (error) {
   console.error('Error starting the server:', error);
