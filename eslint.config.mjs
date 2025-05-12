@@ -1,5 +1,6 @@
 import eslint from '@eslint/js';
 import stylisticTs from '@stylistic/eslint-plugin-ts';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config({ ignores: ['**/build/**'] }, eslint.configs.recommended, tseslint.configs.recommended, {
@@ -8,5 +9,11 @@ export default tseslint.config({ ignores: ['**/build/**'] }, eslint.configs.reco
   },
   rules: {
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+  },
+  languageOptions: {
+    globals: {
+      ...globals.node,
+      ...globals.jest,
+    },
   },
 });
