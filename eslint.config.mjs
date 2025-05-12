@@ -9,4 +9,8 @@ export default tseslint.config({ ignores: ['**/build/**'] }, eslint.configs.reco
   rules: {
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
   },
+  env: {
+    node: true,
+    jest: true,
+  },
 });
