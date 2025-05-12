@@ -1,5 +1,5 @@
 import { store } from '../store';
-import { User } from '../store/type';
+import { UserData } from '../store/type';
 
 export class UserService {
   getUser(userId: string) {
@@ -10,11 +10,11 @@ export class UserService {
     return store.getAll();
   }
 
-  createUser(user: User) {
+  createUser(user: UserData) {
     return store.new(user);
   }
 
-  updateUser(userId: string, user: Partial<User>) {
+  updateUser(userId: string, user: Partial<UserData>) {
     return store.set(userId, user);
   }
 

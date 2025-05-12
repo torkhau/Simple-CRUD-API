@@ -1,12 +1,12 @@
 import { validate } from 'uuid';
 import { RequestMethod, Response } from '../routes/type';
 import { UserService } from '../services';
-import { isPartialUserData, isUserData, User } from '../store/type';
+import { isPartialUserData, isUserData, UserData } from '../store/type';
 
 export class UserController {
   private readonly service = new UserService();
 
-  handle(method: RequestMethod, param?: string, user?: User): Response {
+  handle(method: RequestMethod, param?: string, user?: UserData): Response {
     switch (method) {
       case 'GET':
         return this.getUser(param);
@@ -35,13 +35,13 @@ export class UserController {
     return { statusCode: 200, body: { message: 'OK', data: this.service.getUsers() } };
   }
 
-  private createUser(user?: User): Response {
+  private createUser(user?: UserData): Response {
     if (!isUserData(user)) return { statusCode: 400, body: { message: 'Invalid user data' } };
 
     return { statusCode: 201, body: { message: 'User created', data: this.service.createUser(user) } };
   }
 
-  private updateUser(userId?: string, userData?: Partial<User>): Response {
+  private updateUser(userId?: string, userData?: Partial<UserData>): Response {
     if (!userId || !validate(userId)) return { statusCode: 400, body: { message: 'Invalid user ID' } };
 
     if (!isPartialUserData(userData)) return { statusCode: 400, body: { message: 'Invalid user data' } };
