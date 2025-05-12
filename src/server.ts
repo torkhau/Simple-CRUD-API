@@ -1,7 +1,8 @@
 import { Server } from 'http';
+import 'dotenv/config';
 
 export class CRUDServer extends Server {
-  private readonly PORT = 3000;
+  private readonly PORT = parseInt(process.env.PORT || '3000', 10);
 
   constructor() {
     super();
